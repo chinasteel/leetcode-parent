@@ -46,6 +46,13 @@ import java.util.Map;
  */
 public class EggDown {
 
+	/**
+	 * 暴力递归写法
+	 * 状态转移方程dp(k,n) = 1 + min(max(dp(k, n - x), dp(k -1, x -1)))
+	 *
+	 * @author steel
+	 * datetime 2021/3/11 11:22
+	 */
 	private static class LoopWay {
 		public static int superEggDrop(int k, int n) {
 			if (k < 0 || k > 100) {
@@ -69,12 +76,15 @@ public class EggDown {
 			if (map.containsKey(key)) {
 				result = map.get(key);
 			} else {
+				// 求出从任意一层出发，得到F结果，然后取最小的
 				for (int i = 1; i <= n; i++) {
-					if (result != -1) {
-						result = Math.min(result, Math.max(downLoop(k, n - i, map), downLoop(k - 1, i - 1, map)));
-					} else {
+					// result 首次赋值
+					if (result == -1) {
 						result = Math.max(downLoop(k, n - i, map), downLoop(k - 1, i - 1, map));
+						continue;
 					}
+					// 和历史层数最小值进行比较
+					result = Math.min(result, Math.max(downLoop(k, n - i, map), downLoop(k - 1, i - 1, map)));
 				}
 				map.put(key, result);
 			}
