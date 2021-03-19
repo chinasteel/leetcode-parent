@@ -62,7 +62,7 @@ public class EggDown {
 				throw new IllegalArgumentException("1 <= n <= 10000");
 			}
 
-			Map<String, Integer> map = new HashMap<String, Integer>();
+			Map<String, Integer> map = new HashMap<>();
 			return downLoop(k, n, map);
 		}
 
