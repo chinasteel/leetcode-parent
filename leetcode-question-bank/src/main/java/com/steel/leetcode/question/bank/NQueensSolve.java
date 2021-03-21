@@ -1,6 +1,10 @@
 package com.steel.leetcode.question.bank;
 
+import com.alibaba.fastjson.JSON;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -39,6 +43,9 @@ import java.util.List;
  */
 public class NQueensSolve {
 	public List<List<String>> solveNQueens(int n) {
+		if (n == 1) {
+			return Collections.singletonList(Collections.singletonList("Q"));
+		}
 		int[][] init = new int[n][n];
 		List<List<String>> nQueens = new ArrayList<>();
 		for (int i = 0; i < n; i++) {
@@ -54,9 +61,11 @@ public class NQueensSolve {
 		if (count >= n) {
 			List<String> lineList = new ArrayList<>();
 			for (int i = 0; i < n; i++) {
+				StringBuilder stringBuilder = new StringBuilder();
 				for (int j = 0; j < n; j++) {
-					lineList.add(init[i][j] > 1 ? "Q" : ".");
+					stringBuilder.append(init[i][j] >= 1 ? "Q" : ".");
 				}
+				lineList.add(stringBuilder.toString());
 			}
 			nQueens.add(lineList);
 			return;
@@ -64,8 +73,9 @@ public class NQueensSolve {
 		if (goLevel(init, currentX, currentY, n) && goVertical(init, currentX, currentY, n)
 			&& goRightObliqueLine(init, currentX, currentY, n)
 			&& goLeftObliqueLine(init, currentX, currentY, n)) {
-			init[currentX][currentY] = init[currentX][currentY] + 1;
 			count++;
+			init[currentX][currentY] = 1;
+//			System.out.println("temp hit term:" + count + "init:" + JSON.toJSONString(init));
 		}
 		if (currentY < n - 1) {
 			currentY++;
@@ -73,7 +83,7 @@ public class NQueensSolve {
 			currentY = 0;
 			currentX++;
 		}
-		if (currentX >= n - 1) {
+		if (currentX >= n) {
 			return;
 		}
 		loopJudgeQueens(nQueens, init, currentX, currentY, count, n);
@@ -84,7 +94,6 @@ public class NQueensSolve {
 			if (i != currentY && init[currentX][i] >= 1) {
 				return false;
 			}
-			init[currentX][i] = 1;
 		}
 		return true;
 	}
@@ -94,79 +103,76 @@ public class NQueensSolve {
 			if (i != currentX && init[i][currentY] >= 1) {
 				return false;
 			}
-			init[i][currentY] = 1;
 		}
 		return true;
 	}
 
 	public boolean goRightObliqueLine(int[][] init, int currentX, int currentY, int n) {
+		int currentXTemp = currentX;
+		int currentYTemp = currentY;
 		if (currentX == 0 || currentY == 0) {
-			while (currentX < n - 1 && currentY < n - 1) {
-				currentX++;
-				currentY++;
-				if (init[currentX][currentY] >= 1) {
+			while (currentXTemp < n - 1 && currentYTemp < n - 1) {
+				currentXTemp++;
+				currentYTemp++;
+				if (init[currentXTemp][currentYTemp] >= 1) {
 					return false;
 				}
-				init[currentX][currentY] = 1;
 			}
 			return true;
 		}
-		while (currentX > 0 && currentY > 0) {
-			currentX--;
-			currentY--;
+		while (currentXTemp > 0 && currentYTemp > 0) {
+			currentXTemp--;
+			currentYTemp--;
 
-			if (init[currentX][currentY] >= 1) {
+			if (init[currentXTemp][currentYTemp] >= 1) {
 				return false;
 			}
-			init[currentX][currentY] = 1;
 		}
-		while (currentX < n - 1 && currentY < n - 1) {
-			currentX++;
-			currentY++;
-			if (init[currentX][currentY] >= 1) {
+		while (currentXTemp < n - 1 && currentYTemp < n - 1) {
+			currentXTemp++;
+			currentYTemp++;
+			if (init[currentXTemp][currentYTemp] >= 1) {
 				return false;
 			}
-			init[currentX][currentY] = 1;
 		}
 		return true;
 	}
 
 	public boolean goLeftObliqueLine(int[][] init, int currentX, int currentY, int n) {
+		int currentXTemp = currentX;
+		int currentYTemp = currentY;
 		if (currentX == 0 || currentY == n) {
-			while (currentX < n && currentY > 0) {
-				currentX++;
-				currentY--;
-				if (init[currentX][currentY] >= 1) {
+			while (currentXTemp < n - 1 && currentYTemp > 0) {
+				currentXTemp++;
+				currentYTemp--;
+				if (init[currentXTemp][currentYTemp] >= 1) {
 					return false;
 				}
-				init[currentX][currentY] = 1;
 			}
 			return true;
 		}
-		while (currentX < n && currentY > 0) {
-			currentX++;
-			currentY--;
+		while (currentXTemp < n - 1 && currentYTemp > 0) {
+			currentXTemp++;
+			currentYTemp--;
 
-			if (init[currentX][currentY] >= 1) {
+			if (init[currentXTemp][currentYTemp] >= 1) {
 				return false;
 			}
-			init[currentX][currentY] = 1;
 		}
-		while (currentX > 0 && currentY < n) {
-			currentX--;
-			currentY++;
+		while (currentXTemp > 0 && currentYTemp < n - 1) {
+			currentXTemp--;
+			currentYTemp++;
 
-			if (init[currentX][currentY] >= 1) {
+			if (init[currentXTemp][currentYTemp] >= 1) {
 				return false;
 			}
-			init[currentX][currentY] = 1;
 		}
 		return true;
 	}
 
 	public static void main(String[] args) {
 		NQueensSolve nQueensSolve = new NQueensSolve();
-		List<List<String>> nQueens = nQueensSolve.solveNQueens(4);
+		List<List<String>> nQueens = nQueensSolve.solveNQueens(5);
 		System.out.println(nQueens);
 	}
 }
