@@ -1,9 +1,6 @@
 package com.steel.leetcode.question.bank;
 
-import com.alibaba.fastjson.JSON;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
