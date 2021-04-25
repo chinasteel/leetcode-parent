@@ -1,8 +1,6 @@
 package com.steel.leetcode.question.bank;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * 51. N 皇后
@@ -43,134 +41,65 @@ public class NQueensSolve {
 		if (n == 1) {
 			return Collections.singletonList(Collections.singletonList("Q"));
 		}
-		int[][] init = new int[n][n];
+		int[] init = new int[n];
+		Arrays.fill(init, -1);
+
 		List<List<String>> nQueens = new ArrayList<>();
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
-				loopJudgeQueens(nQueens, init, i, j, 0, n);
-				init = new int[n][n];
-			}
-		}
+		Set<Integer> columnSet = new HashSet<>();
+		Set<Integer> leftObliqueSet = new HashSet<>();
+		Set<Integer> rightObliqueSet = new HashSet<>();
+		loopJudgeQueens(nQueens, init, 0, n, columnSet, leftObliqueSet, rightObliqueSet);
 		return nQueens;
 	}
 
-	public void loopJudgeQueens(List<List<String>> nQueens, int[][] init, int currentX, int currentY, int count, int n) {
-		System.out.println("currentX:" + currentX + ", currentY:" + currentY + ",count:" + count);
-		if (goLevel(init, currentX, currentY, n) && goVertical(init, currentX, currentY, n)
-			&& goRightObliqueLine(init, currentX, currentY, n)
-			&& goLeftObliqueLine(init, currentX, currentY, n)) {
-			count++;
-			init[currentX][currentY] = 1;
-//			System.out.println("temp hit term:" + count + "init:" + JSON.toJSONString(init));
-			if (count >= n) {
-				List<String> lineList = new ArrayList<>();
-				for (int i = 0; i < n; i++) {
-					StringBuilder stringBuilder = new StringBuilder();
-					for (int j = 0; j < n; j++) {
-						stringBuilder.append(init[i][j] >= 1 ? "Q" : ".");
-					}
-					lineList.add(stringBuilder.toString());
-				}
-				nQueens.add(lineList);
-				return;
+	public void loopJudgeQueens(List<List<String>> nQueens, int[] init, int currentRow, int n, Set<Integer> columnSet,
+								Set<Integer> leftObliqueSet, Set<Integer> rightObliqueSet) {
+		if (currentRow == n) {
+			List<String> lineList = new ArrayList<>();
+			for (int i = 0; i < n; i++) {
+				char[] line = new char[n];
+				Arrays.fill(line, '.');
+				// init[i] 代表第i行的第几列是Queen
+				line[init[i]] = 'Q';
+				lineList.add(new String(line));
 			}
-		}
-		if (currentY < n - 1) {
-			currentY++;
-		} else {
-			currentY = 0;
-			currentX++;
-		}
-		if (currentX >= n) {
+			nQueens.add(lineList);
 			return;
 		}
-		loopJudgeQueens(nQueens, init, currentX, currentY, count, n);
-	}
 
-	public boolean goLevel(int[][] init, int currentX, int currentY, int n) {
 		for (int i = 0; i < n; i++) {
-			if (init[currentX][i] >= 1) {
-				return false;
+			if (columnSet.contains(i)) {
+				continue;
 			}
-		}
-		return true;
-	}
+			int leftOblique = currentRow + i;
+			if (leftObliqueSet.contains(leftOblique)) {
+				continue;
+			}
+			int rightOblique = currentRow - i;
+			if (rightObliqueSet.contains(rightOblique)) {
+				continue;
+			}
+			init[currentRow] = i;
+			columnSet.add(i);
+			leftObliqueSet.add(leftOblique);
+			rightObliqueSet.add(rightOblique);
+			System.out.println("current row has make a queen:" + currentRow);
+			loopJudgeQueens(nQueens, init, currentRow + 1, n, columnSet, leftObliqueSet, rightObliqueSet);
 
-	public boolean goVertical(int[][] init, int currentX, int currentY, int n) {
-		for (int i = 0; i < n; i++) {
-			if (init[i][currentY] >= 1) {
-				return false;
-			}
+			// 这里代表currentRow的n列全部循环完，没有符合条件的，需要将上一层递归初始化，重新开始
+			// 或者第一层递归的第i列开头的全部找完，继续从下一个位置开始继续
+			System.out.println("current row start reset queen:" + currentRow);
+			init[currentRow] = -1;
+			columnSet.remove(i);
+			leftObliqueSet.remove(leftOblique);
+			rightObliqueSet.remove(rightOblique);
 		}
-		return true;
-	}
 
-	public boolean goRightObliqueLine(int[][] init, int currentX, int currentY, int n) {
-		int currentXTemp = currentX;
-		int currentYTemp = currentY;
-		if (currentX == 0 || currentY == 0) {
-			while (currentXTemp < n - 1 && currentYTemp < n - 1) {
-				currentXTemp++;
-				currentYTemp++;
-				if (init[currentXTemp][currentYTemp] >= 1) {
-					return false;
-				}
-			}
-			return true;
-		}
-		while (currentXTemp > 0 && currentYTemp > 0) {
-			currentXTemp--;
-			currentYTemp--;
-
-			if (init[currentXTemp][currentYTemp] >= 1) {
-				return false;
-			}
-		}
-		while (currentXTemp < n - 1 && currentYTemp < n - 1) {
-			currentXTemp++;
-			currentYTemp++;
-			if (init[currentXTemp][currentYTemp] >= 1) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	public boolean goLeftObliqueLine(int[][] init, int currentX, int currentY, int n) {
-		int currentXTemp = currentX;
-		int currentYTemp = currentY;
-		if (currentX == 0 || currentY == n - 1) {
-			while (currentYTemp > 0 && currentXTemp < n - 1) {
-				currentYTemp--;
-				currentXTemp++;
-				if (init[currentXTemp][currentYTemp] >= 1) {
-					return false;
-				}
-			}
-			return true;
-		}
-		while (currentXTemp > 0 && currentYTemp < n - 1) {
-			currentXTemp--;
-			currentYTemp++;
-
-			if (init[currentXTemp][currentYTemp] >= 1) {
-				return false;
-			}
-		}
-		while (currentXTemp < n - 1 && currentYTemp > 0) {
-			currentXTemp++;
-			currentYTemp--;
-
-			if (init[currentXTemp][currentYTemp] >= 1) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	public static void main(String[] args) {
 		NQueensSolve nQueensSolve = new NQueensSolve();
-		List<List<String>> nQueens = nQueensSolve.solveNQueens(5);
+		List<List<String>> nQueens = nQueensSolve.solveNQueens(4);
 		System.out.println(nQueens);
 	}
 }
