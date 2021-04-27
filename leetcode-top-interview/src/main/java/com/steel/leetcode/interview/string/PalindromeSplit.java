@@ -44,9 +44,13 @@ public class PalindromeSplit {
 
 	public static List<List<String>> getAllSubList(List<String> chars) {
 		List<List<String>> list = new ArrayList<>();
-		for (int i = 0; i < chars.size(); i++) {
+		int index = 0;
+		for (int step = 0; step < chars.size(); step++) {
 			List<String> subList = new ArrayList<>();
+			for (int i = 0; i < chars.size(); i++) {
 
+				subList.add(chars.get(i + step));
+			}
 		}
 
 		return list;
