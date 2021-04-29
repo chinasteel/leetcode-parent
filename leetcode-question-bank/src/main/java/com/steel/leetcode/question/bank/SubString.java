@@ -8,24 +8,28 @@ import java.util.List;
  * datetime 2021/4/27 15:00
  */
 public class SubString {
-	private List<List<String>> lists = new ArrayList<>();
+	private final List<List<String>> lists = new ArrayList<>();
+	private final List<String> ans = new ArrayList<>();
 
-	public void dfs(String s, int index, List<String> list) {
+	public void dfs(String s, int index) {
+		System.out.println("第" + index + "次递归开始");
 		if (index == s.length()) {
-			lists.add(list);
-			list = new ArrayList<>();
+			lists.add(new ArrayList<>(ans));
+			return;
 		}
 		for (int i = index; i < s.length(); i++) {
 			String subStr = s.substring(index, i + 1);
+			ans.add(subStr);
 			System.out.println(subStr);
-			list.add(subStr);
-			dfs(s, i + 1, list);
+			dfs(s, i + 1);
+			System.out.println("第" + index + "次递归结束 ans = " + ans);
+			ans.remove(ans.size() - 1);
 		}
 	}
 
 	public static void main(String[] args) {
 		SubString subString = new SubString();
-		subString.dfs("aab", 0, new ArrayList<>());
+		subString.dfs("aab", 0);
 		System.out.println(subString.lists);
 	}
 
