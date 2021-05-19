@@ -1,4 +1,4 @@
-package com.steel.leetcode.interview.string;
+package com.steel.leetcode.question.bank;
 
 import java.util.ArrayList;
 import java.util.Arrays;
