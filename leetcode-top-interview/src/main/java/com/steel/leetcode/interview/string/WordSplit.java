@@ -56,17 +56,17 @@ public class WordSplit {
 		System.out.println(result);
 
 		wordSplit = new WordSplit();
-		result = wordSplit.wordBreak("bccdbacdbdacddabbaaaadababadad", Arrays.asList("cbc","bcda","adb","ddca","bad",
-			"bbb","dad","dac","ba","aa","bd","abab","bb","dbda","cb","caccc","d","dd","aadb","cc","b","bcc","bcd","cd",
-			"cbca","bbd","ddd","dabb","ab","acd","a","bbcc","cdcbd","cada","dbca","ac","abacd","cba","cdb","dbac",
-			"aada","cdcda","cdc","dbc","dbcb","bdb","ddbdd","cadaa","ddbc","babb"));
+		result = wordSplit.wordBreakOfficial("bccdbacdbdacddabbaaaadababadad", Arrays.asList("cbc", "bcda", "adb", "ddca", "bad",
+			"bbb", "dad", "dac", "ba", "aa", "bd", "abab", "bb", "dbda", "cb", "caccc", "d", "dd", "aadb", "cc", "b", "bcc", "bcd", "cd",
+			"cbca", "bbd", "ddd", "dabb", "ab", "acd", "a", "bbcc", "cdcbd", "cada", "dbca", "ac", "abacd", "cba", "cdb", "dbac",
+			"aada", "cdcda", "cdc", "dbc", "dbcb", "bdb", "ddbdd", "cadaa", "ddbc", "babb"));
 		System.out.println(result);
 	}
 
 	/**
 	 * 当s过长（bccdbacdbdacddabbaaaadababadad）的时候，占用内存过高，无法提交通过
 	 *
-	 * @param s no desc
+	 * @param s     no desc
 	 * @param index no desc
 	 * @author steel
 	 * datetime 2021/5/19 14:58
@@ -93,7 +93,7 @@ public class WordSplit {
 	 * [[a, a, a, b], [a, a, ab], [a, aa, b], [a, aab], [aa, a, b], [aa, ab], [aaa, b], [aaab]]
 	 *
 	 * @param str no desc
-	 * @return java.util.List<java.util.List<java.lang.String>>
+	 * @return java.util.List<java.util.List < java.lang.String>>
 	 * @author steel
 	 * datetime 2021/5/19 17:29
 	 */
@@ -143,6 +143,32 @@ public class WordSplit {
 		}
 
 		return flag;
+	}
+
+	/**
+	 * 官方题解
+	 *
+	 * @param s        no desc
+	 * @param wordDict no desc
+	 * @return boolean
+	 * @author steel
+	 * datetime 2021/5/20 10:50
+	 */
+	public boolean wordBreakOfficial(String s, List<String> wordDict) {
+		Set<String> wordDictSet = new HashSet<>(wordDict);
+		boolean[] dp = new boolean[s.length() + 1];
+		dp[0] = true;
+		for (int i = 1; i <= s.length(); i++) {
+			// 逐步向后推进
+			for (int j = 0; j < i; j++) {
+				// dp[j]暂存了前一步的结果
+				if (dp[j] && wordDictSet.contains(s.substring(j, i))) {
+					dp[i] = true;
+					break;
+				}
+			}
+		}
+		return dp[s.length()];
 	}
 
 }
