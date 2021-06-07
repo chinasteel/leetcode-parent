@@ -25,6 +25,7 @@ import java.util.List;
  * s 仅由小写英文字母组成
  * <p>
  * 作者：力扣 (LeetCode)
+ * 题解：https://leetcode-cn.com/problems/palindrome-partitioning/solution/fen-ge-hui-wen-chuan-by-leetcode-solutio-6jkv/
  * 链接：https://leetcode-cn.com/leetbook/read/top-interview-questions/xaxi62/
  * 来源：力扣（LeetCode）
  * 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
@@ -45,9 +46,10 @@ public class PalindromeSplitDemo {
 		for (int i = 0; i < n; ++i) {
 			Arrays.fill(f[i], true);
 		}
-
+		// 双指针判断方法 aaba
 		for (int i = n - 1; i >= 0; --i) {
 			for (int j = i + 1; j < n; ++j) {
+				// f(i,j) = f(i+1, j-1) && s[i] = s[j]
 				f[i][j] = (s.charAt(i) == s.charAt(j)) && f[i + 1][j - 1];
 			}
 		}
